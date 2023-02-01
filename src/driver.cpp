@@ -17,7 +17,7 @@ void moveFlywheel()
     }
     if (flywheelOn)
     {
-        flywheel = 85;
+        flywheel = 90;
         pros::lcd::print(1, "flywheel: %f", flywheel.get_actual_velocity());
     }
     else
@@ -53,11 +53,11 @@ void moveIntake()
 
     if (intakeMode == 1)
     {
-        intake.move_velocity(200);
+        intake = 200 ;
     }
     else if (intakeMode == 2)
     {
-        intake.move_velocity(-200);
+        intake = -200;
     }
     else
     {

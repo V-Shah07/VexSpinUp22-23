@@ -1,4 +1,5 @@
 #include "main.h"
+#include "autons.hpp"
 
 
 /////
@@ -77,13 +78,8 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton("Example Drive\n\nDrive forward and come back.", drive_example),
-    Auton("Example Turn\n\nTurn 3 times.", turn_example),
-    Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
-    Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
-    Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
-    Auton("Combine all 3 movements", combining_movements),
-    Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
+    Auton("test drive", Test),
+
   });
 
   // Initialize chassis and auton selector
@@ -136,8 +132,8 @@ void autonomous() {
   chassis.reset_gyro(); // Reset gyro position to 0
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
-
-  ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
+  Test();
+  //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
 }
 
 

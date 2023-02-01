@@ -4,7 +4,7 @@
 
 Motor leftBack(leftBackPort, MOTOR_GEARSET_18, leftBackReversed, MOTOR_ENCODER_DEGREES);
 Motor leftFront(leftFrontPort, MOTOR_GEARSET_18, leftFrontReversed, MOTOR_ENCODER_DEGREES);
-Motor rightBack(rightBackPort, MOTOR_GEARSET_18, rightBackReversed, MOTOR_ENCODER_DEGREES);
+Motor rightBack(rightBackPort, MOTOR_GEARSET_18,  rightBackReversed, MOTOR_ENCODER_DEGREES);
 Motor rightFront(rightFrontPort, MOTOR_GEARSET_18, rightFrontReversed, MOTOR_ENCODER_DEGREES);
 Motor leftTop(leftTopPort, MOTOR_GEARSET_18, leftTopReversed, MOTOR_ENCODER_DEGREES);
 Motor rightTop(rightTopPort, MOTOR_GEARSET_18, rightTopReversed, MOTOR_ENCODER_DEGREES);

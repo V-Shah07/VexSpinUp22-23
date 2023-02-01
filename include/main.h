@@ -87,6 +87,7 @@ void opcontrol(void);
 
  #include "driver.hpp"
  #include "systems.hpp"
+ #include "auton.hpp"
 //#include <iostream>
 #endif
 
