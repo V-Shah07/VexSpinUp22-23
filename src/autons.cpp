@@ -28,8 +28,8 @@ void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
   chassis.set_pid_constants(&chassis.headingPID, .1, 0, 20, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0.1, 0, 0, 0);
-  chassis.set_pid_constants(&chassis.backward_drivePID, 0.01, 0, 0, 0);
+  chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
+  chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 0, 5, 0);
   chassis.set_pid_constants(&chassis.turnPID, 5, 0.003, 35, 15);
   chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
 }
@@ -57,8 +57,6 @@ void drive_example() {
   // The second parameter is max speed the robot will drive at
   // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
-
-
   chassis.set_drive_pid(24, DRIVE_SPEED, true);
   chassis.wait_drive();
 
@@ -234,8 +232,12 @@ void Test()
 {
 //chassis.set_drive_pid(2, DRIVE_SPEED, true);
 chassis.set_pid_constants(&chassis.forward_drivePID, 0.1, 0, 0, 0);
-chassis.reset_pid_targets();
-chassis.set_drive_pid(4, DRIVE_SPEED, false, true);
+
+//chassis.set_drive_pid(24, DRIVE_SPEED, false, true);
+
+chassis.set_pid_constants(&chassis.turnPID, 3, 0.003, 35, 15);
+chassis.set_turn_pid(-90, 100);
 chassis.wait_drive();
-//chassis.set_turn_pid(90, 100);
+chassis.reset_pid_targets();
+chassis.set_turn_pid(0, 100);
 }
