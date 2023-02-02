@@ -17,7 +17,7 @@ void moveFlywheel()
     }
     if (flywheelOn)
     {
-        flywheel = 90;
+        flywheel = 82;
         pros::lcd::print(1, "flywheel: %f", flywheel.get_actual_velocity());
     }
     else

@@ -8,12 +8,7 @@
 /////
 
 
-const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
-                             // If this is 127 and the robot tries to heading correct, it's only correcting by
-                             // making one side slower.  When this is 87%, it's correcting by making one side
-                             // faster and one side slower, giving better heading correction.
-const int TURN_SPEED  = 90;
-const int SWING_SPEED = 90;
+
 
 
 
@@ -57,13 +52,13 @@ void drive_example() {
   // The second parameter is max speed the robot will drive at
   // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  chassis.set_drive_pid(2, DRIVE_SPEED, true);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-12, DRIVE_SPEED);
+  chassis.set_drive_pid(-1, DRIVE_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-12, DRIVE_SPEED);
+  chassis.set_drive_pid(-1, DRIVE_SPEED);
   chassis.wait_drive();
 }
 
