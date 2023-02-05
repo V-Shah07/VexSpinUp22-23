@@ -10,18 +10,16 @@
 
 void moveFlywheel()
 {
-    pros::lcd::print(1, "leftback: %f", flywheel.get_temperature());
-    if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_R1))
-    {
-        flywheelOn = !flywheelOn;
-    }
-    if (flywheelOn)
-    {
-        flywheel = 82;
-        pros::lcd::print(1, "flywheel: %f", flywheel.get_actual_velocity());
-    }
-    else
-        flywheel.move_velocity(0);
+    int target = 8030;
+    int error = target - flywheel.get_voltage();
+    integral += error;
+    int derviative = error - lastError;
+
+    double power = (error * flywheelKp) + (integral * flywheelKi) + (derviative * flywheelKd);
+
+    flywheel.move_voltage(power);
+
+    lastError = error;
 }
 
 void moveIndexer()

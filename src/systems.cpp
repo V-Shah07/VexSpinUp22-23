@@ -14,6 +14,7 @@ Motor intake(intakePort, MOTOR_GEARSET_18, intakeReversed, E_MOTOR_ENCODER_DEGRE
 Motor roller(rollerPort, MOTOR_GEARSET_36, rollerReversed, E_MOTOR_ENCODER_DEGREES);
 Motor indexer(indexerPort, MOTOR_GEARSET_36, indexerReversed, E_MOTOR_ENCODER_DEGREES);
 
+PID flywheelPid{0.75, 0, 0, 0, "flywheel"};
 
 bool flywheelOn = false;
 int intakeMode = 0;
@@ -37,5 +38,6 @@ pros::ADIEncoder trackingEncoder('G', 'H', false);
 Vision visionSensor(visionSensorPort);
 Vision aimbotSensor(visionSensorPort);
 
+double integral = 0, lastError = 0;
 
 // ( vex::PORT1, 50, BLUE ROLLER, RED ROLLER, SIG_3, SIG_4, SIG_5, SIG_6, SIG_7 );

@@ -137,7 +137,8 @@ void autonomous() {
   //drive_example();
   //straight(100.0, true);
   //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
-  main_auton();
+  //prog_skills();
+  right_auton();
 }
 
 
@@ -159,13 +160,16 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
+  int flywheelSpeed = 8900;
   while (true) {
     chassis.arcade_standard(ez::SPLIT);
-    moveFlywheel();
+    //moveFlywheel();
+    flywheelPid.set_target(flywheelSpeed);
+    int power = flywheelPid.compute(flywheel.get_voltage()) + flywheel.get_voltage();
+    flywheel.move_voltage(power);
     moveIntake();
     moveIndexer();
     expand();
-    
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }

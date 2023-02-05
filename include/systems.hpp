@@ -40,6 +40,7 @@ extern Motor rightFront;
 extern Motor leftTop;
 extern Motor rightTop;
 
+extern PID flywheelPid;
 
 extern Motor flywheel;
 extern Motor intake;
@@ -73,6 +74,9 @@ const bool BLUE = false;
 
 const bool color = BLUE;
 
+
+const double flywheelKp = 0.4, flywheelKi = 0.0, flywheelKd = 0.0;
+extern double integral, lastError;
 
 extern pros::IMU inertial;
 
