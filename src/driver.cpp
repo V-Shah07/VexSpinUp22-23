@@ -27,8 +27,18 @@ void moveIndexer()
     if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_R2))
     {
         indexerPiston.set_value(true);
-        pros::delay(500);
+        pros::delay(100);
         indexerPiston.set_value(false);
+    }
+    else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_R1))
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            indexerPiston.set_value(true);
+            pros::delay(250);
+            indexerPiston.set_value(false);
+            pros::delay(250);
+        }
     }
 }
 

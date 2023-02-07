@@ -87,7 +87,9 @@ void initialize() {
   // Initialize chassis and auton selector
   chassis.initialize();
   ez::as::initialize();
+  inertial.reset();
   pros::lcd::clear();
+
 }
 
 
@@ -133,12 +135,28 @@ void autonomous() {
   chassis.reset_pid_targets(); // Resets PID targets to 0
   chassis.reset_gyro(); // Reset gyro position to 0
   chassis.reset_drive_sensor(); // Reset drive sensors to 0
-  chassis.set_drive_brake(pros::E_MOTOR_BRAKE_BRAKE); // Set motors to hold.  This helps autonomous consistency.
+  chassis.set_drive_brake(pros::E_MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
   //drive_example();
   //straight(100.0, true);
   //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
   //prog_skills();
-  right_auton();
+  //right_auton();
+  inertial.reset();
+  while(inertial.is_calibrating())
+  {
+    pros::delay(10);
+  }
+
+  //chassis.set_turn_pid(90.0, 110);
+  customTurnPID(90.0, 150, false);
+  pros::delay(500);
+  customTurnPID(0, 150, false);
+  pros::delay(1000);
+  customTurnPID(270.0, 150, false);
+  pros::delay(500);
+  
+  //customTurnPID(90.0, 200, true);
+
 }
 
 
@@ -160,7 +178,7 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
-  int flywheelSpeed = 8900;
+  int flywheelSpeed = 10000;
   while (true) {
     chassis.arcade_standard(ez::SPLIT);
     //moveFlywheel();

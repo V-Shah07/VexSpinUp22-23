@@ -26,7 +26,7 @@ const bool leftTopReversed = false;
 const bool rightTopReversed = true;
 
 
-const bool flywheelReversed = true;
+const bool flywheelReversed = false;
 const bool intakeReversed = false;
 const bool rollerReversed = true;
 const bool indexerReversed = false;
