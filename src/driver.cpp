@@ -37,7 +37,8 @@ void moveIndexer()
             indexerPiston.set_value(true);
             pros::delay(100);
             indexerPiston.set_value(false);
-            pros::delay(100);
+            if (i == 2) break;
+            pros::delay(200);
         }
     }
 }
@@ -83,7 +84,7 @@ void expand()
 
 void flywheelMaintainer()
 {
-    int speed = 5900;
+    int speed = 5700;
     flywheelPid.set_target(speed);
     int power = flywheelPid.compute(flywheel.get_voltage()) + flywheel.get_voltage();
     flywheel.move_voltage(power);
