@@ -148,12 +148,18 @@ void autonomous() {
   }
 
   //chassis.set_turn_pid(90.0, 110);
-  customTurnPID(90.0, 150, false);
-  pros::delay(500);
-  customTurnPID(0, 150, false);
-  pros::delay(1000);
-  customTurnPID(270.0, 150, false);
-  pros::delay(500);
+  // while (true) {
+  //   controller.print(0, 0, "encoder: %i", trackingEncoder.get_value());
+  //   pros::delay(10);
+  // }
+  
+  straight(24.0, true);
+  // customTurnPID(90.0, 150, false);
+  // pros::delay(500);
+  // customTurnPID(0, 150, false);
+  // pros::delay(1000);
+  // customTurnPID(270.0, 150, false);
+  // pros::delay(500);
   
   //customTurnPID(90.0, 200, true);
 
@@ -178,13 +184,10 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
-  int flywheelSpeed = 10000;
+  Task maintainFlywheel(flywheelMaintainer);
   while (true) {
     chassis.arcade_standard(ez::SPLIT);
     //moveFlywheel();
-    flywheelPid.set_target(flywheelSpeed);
-    int power = flywheelPid.compute(flywheel.get_voltage()) + flywheel.get_voltage();
-    flywheel.move_voltage(power);
     moveIntake();
     moveIndexer();
     expand();

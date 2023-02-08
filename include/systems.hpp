@@ -63,6 +63,8 @@ extern pros::ADIEncoder trackingEncoder;
 extern pros::Vision visionSensor;
 extern pros::Vision aimbotSensor;
 
+extern Task maintainFlywheel;
+
 //extern vision_signature_s_t BLUE_ROLLER;
 //extern vision_signature_s_t RED_ROLLER;
 

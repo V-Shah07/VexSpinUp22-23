@@ -7,3 +7,4 @@ void expand();
 void autoRoller();
 void aimbot();
 void move(double leftPower, double rightPower);
+void flywheelMaintainer();

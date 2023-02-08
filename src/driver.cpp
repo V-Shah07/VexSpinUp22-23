@@ -80,3 +80,11 @@ void expand()
         piston.set_value(true);
     }
 }
+
+void flywheelMaintainer()
+{
+    int speed = 5900;
+    flywheelPid.set_target(speed);
+    int power = flywheelPid.compute(flywheel.get_voltage()) + flywheel.get_voltage();
+    flywheel.move_voltage(power);
+}

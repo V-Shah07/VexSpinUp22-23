@@ -3,18 +3,21 @@
 
 
 void straight(double inches, bool forward) {
-    double Kp = 0.13, Ki = 0.0, Kd = 0.0;
+    double Kp = 0.5, Ki = 0.0, Kd = 0.0;
     double error = 0.0, integral = 0.0, derivative = 0.0;
     double previous_error = 0.0;
+    leftFront.tare_position();
     trackingEncoder.reset();
     double ticksPerInch = 360 / (4.125 * 3.14159);
     double target = inches * ticksPerInch;
+    double minPower = 600;
 
-    while(fabs(trackingEncoder.get_value()) <= target)
+    controller.clear();
+    while(fabs(leftFront.get_position()) <= target)
     {
         
         //controller.print(1, 0, "target: %f", target);
-        error = target - fabs(trackingEncoder.get_value());
+        error = target - fabs(leftFront.get_position());
         if(error < (5*ticksPerInch))
         {
             break;
@@ -23,7 +26,8 @@ void straight(double inches, bool forward) {
         derivative = error - previous_error;
 
         double power = Kp * error + Ki * integral + Kd * derivative;
-        controller.print(0, 0, "Vel: %f", power);
+        if (power < 5) break;
+        //controller.print(0, 0, "error: %i", round(error));
         //controller.print(0, 0, "Encoder: %f", trackingEncoder.get_value());
         // if(power < 3000)
         // {
@@ -33,6 +37,10 @@ void straight(double inches, bool forward) {
         {
             power*=-1;
         }
+        //if (power < minPower) minPower = power;
+        
+        //controller.print(1, 1, "Target: %f", target);
+        controller.print(0, 0, "Current: %f", leftFront.get_position());
 
         leftBack.move_velocity(power);
         rightBack.move_velocity(power);
@@ -64,7 +72,7 @@ double realHeading(double heading)
 
 }
 
-void customTurnPID(double target, double maxSpeed, bool left)
+void customTurnPID(double target, double maxSpeed, bool left, int minVelocity, double errorThresh)
 {
     double Kp = 0.5, Ki = 0.0, Kd = 0.0;
     bool pidEnabled = true;
@@ -76,7 +84,7 @@ void customTurnPID(double target, double maxSpeed, bool left)
     double previous_error = 0;
     double power = 0;
 
-    double errorThresh = 0.05, derivativeThresh = 0.00001;
+    double derivativeThresh = 0.05;
     int sign = 1;
     if(!left)
     {
@@ -92,19 +100,20 @@ void customTurnPID(double target, double maxSpeed, bool left)
 
     int refreshRate = 10;
     int timeSettled = 50;
-    int minVelocity = 5;
+    //int minVelocity = 5;
     int iterationSetlled = timeSettled/refreshRate;
     target = realHeading(target);
     while(pidEnabled)
     {
         double curAngle = realHeading(inertial.get_heading());
         error = target - curAngle;
+        //if (!left) error *= -1;
 
         integral += error;
         derivative = error - previous_error;
         power = Kp * error + Ki * integral + Kd * derivative;
 
-        if((fabs(error) < errorThresh) && (fabs(power) < 1) /*&& (fabs(derivative) < derivativeThresh)*/)
+        if((fabs(error) < errorThresh) && (fabs(power) < 1)/* && (fabs(derivative) < derivativeThresh)*/)
         {
             // iterationSetlled--;
             // if(iterationSetlled <= 0)
@@ -132,16 +141,16 @@ void customTurnPID(double target, double maxSpeed, bool left)
         if(fabs(power) > velCap)
         {
             power = velCap * (power/fabs(power));
-        }
+        }*/
         
         //adjusting for drift
-        int rDiff = fabs((leftFront.get_position() + leftTop.get_position() + leftBack.get_position())/3) - fabs((rightFront.get_position() + rightTop.get_position() + rightBack.get_position())/3);
-        double rMod = rDiff * 0.1 * sign;
-        */
+        // int rDiff = fabs((leftFront.get_position() + leftTop.get_position() + leftBack.get_position())/3) - fabs((rightFront.get_position() + rightTop.get_position() + rightBack.get_position())/3);
+        // double rMod = rDiff * 0.1 * sign;
+        double rMod = 0;
         
-        int leftPower = power;
-        int rightPower = sign * power /*+ rMod*/;
-        controller.print(0, 0, "power: %d", power);
+        int leftPower = -sign * power - rMod;
+        int rightPower = sign * power + rMod;
+        //controller.print(0, 0, "Angle: %i", round(inertial.get_heading()));
         pros::lcd::set_text(2, "power: " + std::to_string(power));
         pros::lcd::set_text(3, "error: " + std::to_string(error));
 
