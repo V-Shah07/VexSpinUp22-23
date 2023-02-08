@@ -35,9 +35,9 @@ void moveIndexer()
         for(int i = 0; i < 3; i++)
         {
             indexerPiston.set_value(true);
-            pros::delay(250);
+            pros::delay(100);
             indexerPiston.set_value(false);
-            pros::delay(250);
+            pros::delay(100);
         }
     }
 }
