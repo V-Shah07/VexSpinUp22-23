@@ -148,8 +148,8 @@ void customTurnPID(double target, double maxSpeed, bool left, int minVelocity, d
         // double rMod = rDiff * 0.1 * sign;
         double rMod = 0;
         
-        int leftPower = -sign * power - rMod;
-        int rightPower = sign * power + rMod;
+        int leftPower = -sign * fabs(power) - rMod;
+        int rightPower = sign * fabs(power) + rMod;
         //controller.print(0, 0, "Angle: %i", round(inertial.get_heading()));
         pros::lcd::set_text(2, "power: " + std::to_string(power));
         pros::lcd::set_text(3, "error: " + std::to_string(error));
