@@ -102,11 +102,32 @@ void customTurnPID(double target, double maxSpeed, bool left, int minVelocity, d
     int timeSettled = 50;
     //int minVelocity = 5;
     int iterationSetlled = timeSettled/refreshRate;
-    target = realHeading(target);
+
+
     while(pidEnabled)
     {
-        double curAngle = realHeading(inertial.get_heading());
+        double curAngle = inertial.get_heading();
         error = target - curAngle;
+
+        //3 possible angles
+        int two, three;
+        int one = error;
+        two = error + 360;
+        three = error - 360;
+        
+        if(fabs(one) < fabs(two) && fabs(one) < fabs(three))
+        {
+            error = one;
+        }
+        else if(fabs(two) < fabs(one) && fabs(two) < fabs(three))
+        {
+            error = two;
+        }
+        else
+        {
+            error = three;
+        }
+
         //if (!left) error *= -1;
 
         integral += error;
@@ -148,8 +169,37 @@ void customTurnPID(double target, double maxSpeed, bool left, int minVelocity, d
         // double rMod = rDiff * 0.1 * sign;
         double rMod = 0;
         
-        int leftPower = -sign * fabs(power) - rMod;
-        int rightPower = sign * fabs(power) + rMod;
+        int leftPower, rightPower;
+        int curPowerSign = power/fabs(power);
+        if(left)
+        {
+            //this means leftpower has to be negative
+
+            if(curPowerSign == 1)
+            {
+                leftPower = -1 * power;
+                rightPower = power;
+            }
+            else
+            {
+                leftPower = power;
+                rightPower = -1 * power;
+            }
+        }
+        else
+        {
+            //this means rightpower has to be negative
+            if(curPowerSign == 1)
+            {
+                leftPower = power;
+                rightPower = -1 * power;
+            }
+            else
+            {
+                leftPower = -1 * power;
+                rightPower = power;
+            }
+        }
         //controller.print(0, 0, "Angle: %i", round(inertial.get_heading()));
         pros::lcd::set_text(2, "power: " + std::to_string(power));
         pros::lcd::set_text(3, "error: " + std::to_string(error));

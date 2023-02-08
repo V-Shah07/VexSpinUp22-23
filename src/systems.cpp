@@ -14,7 +14,7 @@ Motor intake(intakePort, MOTOR_GEARSET_18, intakeReversed, E_MOTOR_ENCODER_DEGRE
 Motor roller(rollerPort, MOTOR_GEARSET_36, rollerReversed, E_MOTOR_ENCODER_DEGREES);
 Motor indexer(indexerPort, MOTOR_GEARSET_36, indexerReversed, E_MOTOR_ENCODER_DEGREES);
 
-PID flywheelPid{10, 0, 0, 0, "flywheel"};
+PID flywheelPid{15, 0, 0, 0, "flywheel"};
 
 bool flywheelOn = false;
 int intakeMode = 0;

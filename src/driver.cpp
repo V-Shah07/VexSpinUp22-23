@@ -38,7 +38,8 @@ void moveIndexer()
             pros::delay(100);
             indexerPiston.set_value(false);
             if (i == 2) break;
-            pros::delay(200);
+            else if (i == 1) pros::delay(400);
+            else pros::delay(300);
         }
     }
 }
@@ -84,8 +85,13 @@ void expand()
 
 void flywheelMaintainer()
 {
-    int speed = 5700;
-    flywheelPid.set_target(speed);
-    int power = flywheelPid.compute(flywheel.get_voltage()) + flywheel.get_voltage();
-    flywheel.move_voltage(power);
+    //3500
+    int speed = 12000;
+    while (true) {
+        flywheelPid.set_target(speed);
+        int power = flywheelPid.compute(flywheel.get_voltage()) + flywheel.get_voltage();
+        flywheel.move_voltage(power);
+        pros::delay(10);
+    }
+
 }
