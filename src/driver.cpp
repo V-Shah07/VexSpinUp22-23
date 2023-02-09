@@ -86,11 +86,11 @@ void expand()
 void flywheelMaintainer()
 {
     //3500
-    int speed = 12000;
+    int velocityTarget = 500;
     while (true) {
-        flywheelPid.set_target(speed);
-        int power = flywheelPid.compute(flywheel.get_voltage()) + flywheel.get_voltage();
-        flywheel.move_voltage(power);
+        flywheelPid.set_target(velocityTarget);
+        int velocity = flywheelPid.compute(flywheel.get_actual_velocity()) + velocityTarget;
+        flywheel.move_voltage(velocity * 20);
         pros::delay(10);
     }
 

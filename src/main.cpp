@@ -141,26 +141,21 @@ void autonomous() {
   //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
   //prog_skills();
   //right_auton();
-  inertial.reset();
-  while(inertial.is_calibrating())
-  {
-    pros::delay(10);
-  }
-
+  drive_example();
   //chassis.set_turn_pid(90.0, 110);
   // while (true) {
   //   controller.print(0, 0, "encoder: %i", trackingEncoder.get_value());
   //   pros::delay(10);
   // }
-  chassis.set_turn_pid(90.0, TURN_SPEED);
-  chassis.wait_drive();
-  pros::delay(500);
-  chassis.set_turn_pid(0.0, TURN_SPEED);
-  chassis.wait_drive();
-  pros::delay(500);
-  chassis.set_drive_pid(tileLength, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(0.0, TURN_SPEED);
+  // chassis.set_turn_pid(90.0, TURN_SPEED);
+  // chassis.wait_drive();
+  // pros::delay(500);
+  // chassis.set_turn_pid(0.0, TURN_SPEED);
+  // chassis.wait_drive();
+  // pros::delay(500);
+  // chassis.set_drive_pid(tileLength, DRIVE_SPEED);
+  // chassis.wait_drive();
+  // chassis.set_drive_pid(0.0, TURN_SPEED);
   // customTurnPID(90.0, 150, false);
   // pros::delay(500);
   // customTurnPID(0, 150, false);
