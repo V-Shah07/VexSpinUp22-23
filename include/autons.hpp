@@ -20,3 +20,4 @@ void modified_exit_condition();
 void left_auton();
 void right_auton();
 void prog_skills();
+void new_left_auton();
