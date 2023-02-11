@@ -15,8 +15,6 @@ void straight(double inches, bool forward) {
     controller.clear();
     while(fabs(leftFront.get_position()) <= target)
     {
-        
-        //controller.print(1, 0, "target: %f", target);
         error = target - fabs(leftFront.get_position());
         if(error < (5*ticksPerInch))
         {
@@ -27,19 +25,10 @@ void straight(double inches, bool forward) {
 
         double power = Kp * error + Ki * integral + Kd * derivative;
         if (power < 5) break;
-        //controller.print(0, 0, "error: %i", round(error));
-        //controller.print(0, 0, "Encoder: %f", trackingEncoder.get_value());
-        // if(power < 3000)
-        // {
-        //     power = 3000;
-        // }
         if(!forward)
         {
             power*=-1;
         }
-        //if (power < minPower) minPower = power;
-        
-        //controller.print(1, 1, "Target: %f", target);
         controller.print(0, 0, "Current: %f", leftFront.get_position());
 
         leftBack.move_velocity(power);
@@ -134,13 +123,8 @@ void customTurnPID(double target, double maxSpeed, bool left, int minVelocity, d
         derivative = error - previous_error;
         power = Kp * error + Ki * integral + Kd * derivative;
 
-        if((fabs(error) < errorThresh) && (fabs(power) < 1)/* && (fabs(derivative) < derivativeThresh)*/)
+        if((fabs(error) < errorThresh) && (fabs(power) < 1))
         {
-            // iterationSetlled--;
-            // if(iterationSetlled <= 0)
-            // {
-            //     pidEnabled = false;
-            // }
             pidEnabled = false;
         }
         else
@@ -152,55 +136,22 @@ void customTurnPID(double target, double maxSpeed, bool left, int minVelocity, d
         {
             power = minVelocity * (power/fabs(power));
         }
-        /*
-        //Capping the velocity
-        velCap += accel;
-        if(velCap > maxSpeed)
-        {
-            velCap = maxSpeed;
-        }
-        if(fabs(power) > velCap)
-        {
-            power = velCap * (power/fabs(power));
-        }*/
-        
-        //adjusting for drift
-        // int rDiff = fabs((leftFront.get_position() + leftTop.get_position() + leftBack.get_position())/3) - fabs((rightFront.get_position() + rightTop.get_position() + rightBack.get_position())/3);
-        // double rMod = rDiff * 0.1 * sign;
+
         double rMod = 0;
         
         int leftPower, rightPower;
         int curPowerSign = power/fabs(power);
         if(left)
         {
-            //this means leftpower has to be negative
-
-            if(curPowerSign == 1)
-            {
-                leftPower = -1 * power;
-                rightPower = power;
-            }
-            else
-            {
-                leftPower = power;
-                rightPower = -1 * power;
-            }
+            leftPower = -1 * curPowerSign * power;
+            rightPower = curPowerSign * power;
         }
         else
         {
-            //this means rightpower has to be negative
-            if(curPowerSign == 1)
-            {
-                leftPower = power;
-                rightPower = -1 * power;
-            }
-            else
-            {
-                leftPower = -1 * power;
-                rightPower = power;
-            }
+            leftPower = curPowerSign * power;
+            rightPower = -1 * curPowerSign * power;
         }
-        //controller.print(0, 0, "Angle: %i", round(inertial.get_heading()));
+        
         pros::lcd::set_text(2, "power: " + std::to_string(power));
         pros::lcd::set_text(3, "error: " + std::to_string(error));
 
@@ -221,5 +172,4 @@ void customTurnPID(double target, double maxSpeed, bool left, int minVelocity, d
     rightFront.move_velocity(0);
     leftTop.move_velocity(0);
     rightTop.move_velocity(0);
-
 }

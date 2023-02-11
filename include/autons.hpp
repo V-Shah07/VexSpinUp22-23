@@ -21,3 +21,4 @@ void frontAuton();
 void right_auton();
 void prog_skills();
 void front_auton();
+void easy_prog_skills();

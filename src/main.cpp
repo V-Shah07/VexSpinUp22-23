@@ -63,6 +63,7 @@ Drive chassis (
 void initialize() {
   // Print our branding over your terminal :D
   ez::print_ez_template();
+  inertial.reset();
   
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
@@ -87,7 +88,10 @@ void initialize() {
   // Initialize chassis and auton selector
   chassis.initialize();
   ez::as::initialize();
-  inertial.reset();
+  
+  while (inertial.is_calibrating()) {
+    pros::delay(10);
+  }
   pros::lcd::clear();
 
 }
@@ -141,7 +145,7 @@ void autonomous() {
   //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
   //prog_skills();
   //right_auton();
-  drive_example();
+  front_auton();
   //chassis.set_turn_pid(90.0, 110);
   // while (true) {
   //   controller.print(0, 0, "encoder: %i", trackingEncoder.get_value());
@@ -187,6 +191,7 @@ void opcontrol() {
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
   Task maintainFlywheel(flywheelMaintainer);
+  controller.clear();
   while (true) {
     chassis.arcade_standard(ez::SPLIT);
     //moveFlywheel();

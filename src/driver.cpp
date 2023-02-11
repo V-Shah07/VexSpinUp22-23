@@ -1,11 +1,13 @@
 #include "main.h"
 #include <functional>
 #include <iostream>
+#include <string>
 #include <tuple>
 
 #include "EZ-Template/PID.hpp"
 #include "EZ-Template/util.hpp"
 #include "pros/llemu.hpp"
+#include "pros/misc.h"
 #include "pros/motors.h"
 
 void moveFlywheel()
@@ -22,25 +24,31 @@ void moveFlywheel()
     lastError = error;
 }
 
-void moveIndexer()
+void moveIndexer() // shooting
 {
-    if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_R2))
+    if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_R2)) // Single shot
     {
         indexerPiston.set_value(true);
         pros::delay(100);
         indexerPiston.set_value(false);
     }
-    else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_R1))
+    else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_R1)) // Rapid fire three shots
     {
-        for(int i = 0; i < 3; i++)
-        {
-            indexerPiston.set_value(true);
-            pros::delay(100);
-            indexerPiston.set_value(false);
-            if (i == 2) break;
-            else if (i == 1) pros::delay(400);
-            else pros::delay(300);
-        }
+        Task rapidFireTask(rapidFire); // Start the task that runs three shots without blocking the main thread
+    }
+}
+
+// Method for the task that shoots 3 discs
+void rapidFire()
+{
+    for(int i = 0; i < 3; i++) // Fire 3 shots
+    {
+        indexerPiston.set_value(true);
+        pros::delay(100);
+        indexerPiston.set_value(false);
+        if (i == 2) break;
+        else if (i == 1) pros::delay(400);
+        else pros::delay(300);
     }
 }
 
@@ -85,13 +93,32 @@ void expand()
 
 void flywheelMaintainer()
 {
-    //3500
-    int velocityTarget = 500;
+    int velocityTarget = 480;
+    bool flywheel_on = true;
+    controller.clear();
     while (true) {
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+            velocityTarget += 10;
+            controller.print(0,  0, "Target: %f", velocityTarget);
+            pros::lcd::set_text(2, "target: " + std::to_string(velocityTarget));
+        }
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            velocityTarget -= 10;
+            controller.print(0, 0, "Target: %f", velocityTarget);
+            pros::lcd::set_text(2, "target: " + std::to_string(velocityTarget));
+        }
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            flywheel_on = !flywheel_on;
+        }
         flywheelPid.set_target(velocityTarget);
         int velocity = flywheelPid.compute(flywheel.get_actual_velocity()) + velocityTarget;
-        flywheel.move_voltage(velocity * 20);
+        if (velocity < velocityTarget) velocity = velocityTarget;
+        if (flywheel_on) flywheel.move_voltage(velocity * 20);
+        else flywheel.move_voltage(0);
+        pros::lcd::set_text(1, "Current: " + std::to_string(flywheel.get_actual_velocity()));
+
         pros::delay(10);
+        
     }
 
 }
