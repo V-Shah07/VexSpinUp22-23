@@ -145,7 +145,8 @@ void autonomous() {
   //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
   //prog_skills();
   //right_auton();
-  front_auton();
+  //front_auton();
+  easy_prog_skills();
   //chassis.set_turn_pid(90.0, 110);
   // while (true) {
   //   controller.print(0, 0, "encoder: %i", trackingEncoder.get_value());

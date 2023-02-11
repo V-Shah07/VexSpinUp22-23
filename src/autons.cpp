@@ -275,14 +275,14 @@ void front_auton()
   pros::delay(200);
   flywheel.move_voltage(12000);
 
-  chassis.set_turn_pid(-125, TURN_SPEED);
+  chassis.set_turn_pid(-127, TURN_SPEED);
   chassis.wait_drive();
 
   //chassis.set_pid_constants(&chassis.forward_drivePID, 1.5, 0, 5, 0);
-  chassis.set_drive_pid(-tileLength * 0.9, DRIVE_SPEED * 2);
+  chassis.set_drive_pid(-tileLength, DRIVE_SPEED * 2);
   chassis.wait_drive();
   //chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
-
+  pros::delay(100);
   intake.move_velocity(-200);
   pros::delay(200);
   
@@ -293,8 +293,8 @@ void front_auton()
   chassis.wait_drive();
   
   flywheel.move_velocity(600);
-  chassis.set_drive_pid(-tileLength * .2, DRIVE_SPEED / 2);
-  chassis.wait_drive();
+  // chassis.set_drive_pid(-tileLength * .2, DRIVE_SPEED / 2);
+  // chassis.wait_drive();
   chassis.set_turn_pid(-34, TURN_SPEED);
   chassis.wait_drive();
   pros::delay(3000);
@@ -304,7 +304,10 @@ void front_auton()
     pros::delay(400);
     flywheel.move_velocity(600);
     indexerPiston.set_value(false);
+    chassis.set_turn_pid(-36.0, TURN_SPEED);
+    chassis.wait_drive();
     pros::delay(600);
+   
   }
   // pros::delay(100);
   // intake.move_velocity(0);
@@ -352,6 +355,7 @@ void easy_prog_skills()
   chassis.set_turn_pid(-135.0, TURN_SPEED);
   chassis.wait_drive();
   chassis.set_drive_pid(tileLength * .8, DRIVE_SPEED);
+  chassis.wait_drive();
   piston.set_value(true);
 }
 
