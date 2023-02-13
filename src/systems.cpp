@@ -1,3 +1,4 @@
+#include "EZGraphLib/Grapher.hpp"
 #include "main.h"
 #include "pros/adi.hpp"
 #include "pros/motors.h"
@@ -41,3 +42,5 @@ Vision aimbotSensor(visionSensorPort);
 double integral = 0, lastError = 0;
 
 // ( vex::PORT1, 50, BLUE ROLLER, RED ROLLER, SIG_3, SIG_4, SIG_5, SIG_6, SIG_7 );
+
+std::shared_ptr<graph::AsyncGrapher> grapher(new graph::AsyncGrapher("Flywheel Velocity vs. Time"));
