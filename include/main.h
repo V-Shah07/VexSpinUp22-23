@@ -43,7 +43,7 @@
 //#include "pros/api_legacy.h"
 #include "EZ-Template/api.hpp"
 #include "autons.hpp"
-#include "EZGraphLib/Grapher.hpp"
+#include "Graphy/Grapher.hpp"
 
 // More includes here...
 //

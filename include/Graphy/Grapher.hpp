@@ -15,7 +15,7 @@
 #define GRAPH_RIGHT 455
 #define MAX_DATA 14
 
-namespace graph {
+namespace graphy {
 
 class AsyncGrapher : public TaskWrapper {
     private:
