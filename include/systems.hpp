@@ -1,11 +1,11 @@
 #include "main.h"
 
-const int leftFrontPort = 3;
-const int rightFrontPort = 1;
-const int leftBackPort = 6;
-const int rightBackPort = 4;
-const int leftTopPort = 5;
-const int rightTopPort = 2;
+const int leftFrontPort = 1;
+const int rightFrontPort = 4;
+const int leftBackPort = 2;
+const int rightBackPort = 5;
+const int leftTopPort = 3;
+const int rightTopPort = 6;
 
 
 const int flywheelPort = 11;
@@ -18,12 +18,12 @@ const int inertialPort = 12;
 const int visionSensorPort = 9;
 const int aimbotSensorPort = 18;
 
-const bool leftBackReversed = true;
+const bool leftBackReversed = false;
 const bool rightBackReversed = false;
-const bool leftFrontReversed = true;
+const bool leftFrontReversed = false;
 const bool rightFrontReversed = false;
 const bool leftTopReversed = false;
-const bool rightTopReversed = true;
+const bool rightTopReversed = false;
 
 
 const bool flywheelReversed = false;

@@ -71,11 +71,11 @@ void moveIntake()
 
     if (intakeMode == 1)
     {
-        intake = 200 ;
+        intake = 600;
     }
     else if (intakeMode == 2)
     {
-        intake = -200;
+        intake = -600;
     }
     else
     {

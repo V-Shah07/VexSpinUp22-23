@@ -1,6 +1,7 @@
 #include "main.h"
 #include "autons.hpp"
 #include "pros/motors.h"
+#include "ARMS/config.h"
 
 
 /////
@@ -13,18 +14,18 @@
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-6, -3, 5}
+  {1, 2, 3}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{4, 1, -2}
+  ,{4, 5, 6}
 
   // IMU Port
   ,12
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
-  ,4.125
+  ,3.25
 
   // Cartridge RPM
   //   (or tick per rotation if using tracking wheels)
@@ -34,7 +35,7 @@ Drive chassis (
   //    (or gear ratio of tracking wheel)
   // eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
   // eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-  ,2.333
+  ,1.667
 
   // Uncomment if using tracking wheels
   /*
@@ -88,6 +89,7 @@ void initialize() {
   // Initialize chassis and auton selector
   chassis.initialize();
   ez::as::initialize();
+  arms::init();
   
   while (inertial.is_calibrating()) {
     pros::delay(10);
@@ -143,34 +145,16 @@ void autonomous() {
   //drive_example();
   //straight(100.0, true);
   //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
-  // prog_skills();
-  // right_auton();
-  //front_auton();
-  front_auton();
-  //easy_prog_skills();
-  //chassis.set_turn_pid(90.0, 110);
-  // while (true) {
-  //   controller.print(0, 0, "encoder: %i", trackingEncoder.get_value());
-  //   pros::delay(10);
-  // }
-  // chassis.set_turn_pid(90.0, TURN_SPEED);
-  // chassis.wait_drive();
-  // pros::delay(500);
-  // chassis.set_turn_pid(0.0, TURN_SPEED);
-  // chassis.wait_drive();
-  // pros::delay(500);
-  // chassis.set_drive_pid(tileLength, DRIVE_SPEED);
-  // chassis.wait_drive();
-  // chassis.set_drive_pid(0.0, TURN_SPEED);
-  // customTurnPID(90.0, 150, false);
-  // pros::delay(500);
-  // customTurnPID(0, 150, false);
-  // pros::delay(1000);
-  // customTurnPID(270.0, 150, false);
-  // pros::delay(500);
-  
-  //customTurnPID(90.0, 200, true);
-
+  switch (abs(arms::selector::auton)) {
+    case 0:
+      prog_skills();
+      break;
+    case 1:
+      front_auton();
+      break;
+    default:
+      break;
+  }
 }
 
 

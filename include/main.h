@@ -44,6 +44,7 @@
 #include "EZ-Template/api.hpp"
 #include "autons.hpp"
 #include "Graphy/Grapher.hpp"
+#include "ARMS/api.h"
 
 // More includes here...
 //
