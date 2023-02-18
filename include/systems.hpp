@@ -19,11 +19,11 @@ const int visionSensorPort = 9;
 const int aimbotSensorPort = 18;
 
 const bool leftBackReversed = false;
-const bool rightBackReversed = false;
+const bool rightBackReversed = true;
 const bool leftFrontReversed = false;
-const bool rightFrontReversed = false;
+const bool rightFrontReversed = true;
 const bool leftTopReversed = false;
-const bool rightTopReversed = false;
+const bool rightTopReversed = true;
 
 
 const bool flywheelReversed = false;

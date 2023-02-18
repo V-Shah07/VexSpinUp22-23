@@ -11,7 +11,7 @@ namespace arms {
 
 // Negative numbers mean reversed motor
 #define LEFT_MOTORS 1, 2, 3
-#define RIGHT_MOTORS 4, 5, 6
+#define RIGHT_MOTORS -4, -5, -6
 #define GEARSET pros::E_MOTOR_GEAR_200 // RPM of chassis motors
 
 // Ticks per inch
