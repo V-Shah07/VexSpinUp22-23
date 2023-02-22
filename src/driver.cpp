@@ -8,6 +8,7 @@
 #include "EZ-Template/util.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
+#include "pros/misc.hpp"
 #include "pros/motors.h"
 
 void moveFlywheel()
@@ -54,14 +55,14 @@ void rapidFire()
 
 void moveIntake()
 {
-    if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1))
+    if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L2))
     {
         if (intakeMode == 1)
             intakeMode = 0;
         else
             intakeMode = 1;
     }
-    else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L2))
+    else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1))
     {
         if (intakeMode == 2)
             intakeMode = 0;
@@ -126,5 +127,13 @@ void flywheelMaintainer()
         pros::delay(10);
         
     }
-
+}
+void test()
+{
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+    {
+        pros::lcd::clear();
+        pros::lcd::set_text(4, "Test");
+        controller.print(0, 0, "Test");
+    }
 }

@@ -1,7 +1,7 @@
 #include "main.h"
 #include "autons.hpp"
 #include "pros/motors.h"
-#include "ARMS/config.h"
+//#include "ARMS/config.h"
 
 
 /////
@@ -14,14 +14,14 @@
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {1, 2, 3}
+  {4,5, 6}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{-4, -5, -6}
+  ,{1, 2, 3}
 
   // IMU Port
-  ,12
+  ,20
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -89,11 +89,7 @@ void initialize() {
   // Initialize chassis and auton selector
   chassis.initialize();
   ez::as::initialize();
-  arms::init();
-  
-  while (inertial.is_calibrating()) {
-    pros::delay(10);
-  }
+  //arms::init();
   pros::lcd::clear();
 
 }

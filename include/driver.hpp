@@ -9,3 +9,4 @@ void aimbot();
 void move(double leftPower, double rightPower);
 void flywheelMaintainer();
 void rapidFire();
+void test();

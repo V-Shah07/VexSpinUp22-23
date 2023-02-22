@@ -11,8 +11,6 @@ Motor rightTop(rightTopPort, MOTOR_GEARSET_18, rightTopReversed, MOTOR_ENCODER_D
 
 Motor flywheel(flywheelPort, MOTOR_GEARSET_06, flywheelReversed, E_MOTOR_ENCODER_DEGREES);
 Motor intake(intakePort, MOTOR_GEARSET_06, intakeReversed, E_MOTOR_ENCODER_DEGREES);
-Motor roller(rollerPort, MOTOR_GEARSET_36, rollerReversed, E_MOTOR_ENCODER_DEGREES);
-Motor indexer(indexerPort, MOTOR_GEARSET_36, indexerReversed, E_MOTOR_ENCODER_DEGREES);
 
 PID flywheelPid{7, 0, 0, 0, "flywheel"};
 

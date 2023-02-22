@@ -8,10 +8,9 @@ const int leftTopPort = 3;
 const int rightTopPort = 6;
 
 
-const int flywheelPort = 11;
+const int flywheelPort = 7;
 const int intakePort = 8;
-const int rollerPort = 8;
-const int indexerPort = 10;
+
 
 const int inertialPort = 12;
 

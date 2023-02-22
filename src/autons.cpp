@@ -252,19 +252,26 @@ void front_auton()
 {
   flywheel.move_voltage(9000);
   //chassis.wait_drive();
+
+
+  //roller
   chassis.set_drive_pid(-tileLength*0.3, DRIVE_SPEED);
   chassis.wait_drive();
   intake.move_velocity(100);
   pros::delay(150);
   intake.move_velocity(0);
 
+  //move off roller 
   chassis.set_drive_pid(tileLength * .3, DRIVE_SPEED);
   chassis.wait_drive();
+
+  //turn to lowgoal
   chassis.set_turn_pid(90, TURN_SPEED);
   chassis.wait_drive();
 
   // controller.print(0, 0, "Flywheel: %f", flywheel.get_actual_velocity());
 
+  //shoot
   for(int i = 0; i < 2; i++)
   {
     indexerPiston.set_value(true);
@@ -276,20 +283,17 @@ void front_auton()
   pros::delay(200);
   flywheel.move_voltage(12000);
 
+  //turn to 3 stack
   chassis.set_turn_pid(-130, TURN_SPEED);
   chassis.wait_drive();
-
-  //chassis.set_pid_constants(&chassis.forward_drivePID, 1.5, 0, 5, 0);
-  chassis.set_drive_pid(-tileLength, DRIVE_SPEED * 2);
-  chassis.wait_drive();
-  //chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
-  pros::delay(100);
   intake.move_velocity(-200);
-  pros::delay(200);
-  
-  chassis.set_drive_pid(-tileLength * 1.3, DRIVE_SPEED/2);
+
+  //intake 3 stack 
+  chassis.set_drive_pid(-tileLength *2.3 , DRIVE_SPEED/1.5);
   chassis.wait_drive();
-  
+  pros::delay(500);
+
+  //turn to goal 
   chassis.set_turn_pid(-45, TURN_SPEED);
   chassis.wait_drive();
   
@@ -299,6 +303,7 @@ void front_auton()
   chassis.set_turn_pid(-34, TURN_SPEED);
   chassis.wait_drive();
   pros::delay(3000);
+  //shoot 
   for(int i = 0; i < 3; i++)
   {
     indexerPiston.set_value(true);
