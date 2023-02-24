@@ -1,7 +1,7 @@
 #include "main.h"
 #include "autons.hpp"
 #include "pros/motors.h"
-//#include "ARMS/config.h"
+#include "ARMS/config.h"
 
 
 /////
@@ -11,17 +11,17 @@
 
 
 // Chassis constructor
-Drive chassis (
+Drive ez_chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {4,5, 6}
+  {-1, -2, -3}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{1, 2, 3}
+  ,{4, 5, 6}
 
   // IMU Port
-  ,20
+  ,11
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -64,21 +64,21 @@ Drive chassis (
 void initialize() {
   // Print our branding over your terminal :D
   ez::print_ez_template();
-  inertial.reset();
+  //inertial.reset();
   
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
   // Configure your chassis controls
-  chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
-  chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
-  chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+  ez_chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
+  ez_chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
+  ez_chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
   exit_condition_defaults(); // Set the exit conditions to your own constants from autons.cpp!
 
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
-  // chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used. 
-  // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
+  // ez_chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used. 
+  // ez_chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
@@ -87,9 +87,13 @@ void initialize() {
   });
 
   // Initialize chassis and auton selector
-  chassis.initialize();
-  ez::as::initialize();
+  ez_chassis.initialize();
+  //ez::as::initialize();
   //arms::init();
+
+  while (inertial.is_calibrating()) {
+    pros::delay(10);
+  }
   pros::lcd::clear();
 
 }
@@ -134,21 +138,22 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-  chassis.reset_pid_targets(); // Resets PID targets to 0
-  chassis.reset_gyro(); // Reset gyro position to 0
-  chassis.reset_drive_sensor(); // Reset drive sensors to 0
-  chassis.set_drive_brake(pros::E_MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
+  ez_chassis.reset_pid_targets(); // Resets PID targets to 0
+  ez_chassis.reset_gyro(); // Reset gyro position to 0
+  ez_chassis.reset_drive_sensor(); // Reset drive sensors to 0
+  ez_chassis.set_drive_brake(pros::E_MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
   //drive_example();
   //straight(100.0, true);
   //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
   switch (abs(arms::selector::auton)) {
     case 0:
-      prog_skills();
+      drive_example();
       break;
     case 1:
       front_auton();
       break;
     default:
+      drive_example();
       break;
   }
 }
@@ -170,12 +175,12 @@ void autonomous() {
  */
 void opcontrol() {
   // This is preference to what you like to drive on.
-  chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+  ez_chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
   Task maintainFlywheel(flywheelMaintainer);
   controller.clear();
   while (true) {
-    chassis.arcade_standard(ez::SPLIT);
+    ez_chassis.arcade_standard(ez::SPLIT);
     //moveFlywheel();
     moveIntake();
     moveIndexer();

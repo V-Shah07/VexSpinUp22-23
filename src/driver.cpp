@@ -100,7 +100,7 @@ void flywheelMaintainer()
     grapher->addDataType("Desired Vel", COLOR_ORANGE);
     grapher->addDataType("Actual Vel", COLOR_AQUAMARINE);
 
-    grapher->startTask();
+    //grapher->startTask();
     while (true) {
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
             velocityTarget += 10;
@@ -121,9 +121,8 @@ void flywheelMaintainer()
         if (flywheel_on) flywheel.move_voltage(velocity * 20);
         else flywheel.move_voltage(0);
         pros::lcd::set_text(1, "Current: " + std::to_string(flywheel.get_actual_velocity()));
-
-        grapher->update("Desired Vel", velocityTarget);
-        grapher->update("Actual Vel", flywheel.get_actual_velocity());
+        // grapher->update("Desired Vel", velocityTarget);
+        // grapher->update("Actual Vel", flywheel.get_actual_velocity());
         pros::delay(10);
         
     }

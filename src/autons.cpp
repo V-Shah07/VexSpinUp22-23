@@ -1,4 +1,6 @@
 #include "autons.hpp"
+#include "ARMS/chassis.h"
+#include "ARMS/flags.h"
 #include "EZ-Template/drive/drive.hpp"
 #include "main.h"
 
@@ -21,26 +23,26 @@
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
 
 void default_constants() {
-  chassis.set_slew_min_power(80, 80);
-  chassis.set_slew_distance(7, 7);
-  chassis.set_pid_constants(&chassis.headingPID, .1, 0, 20, 0);
-  chassis.set_pid_constants(&chassis.forward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.backward_drivePID, 0.45, 0, 5, 0);
-  chassis.set_pid_constants(&chassis.turnPID, 7.0, 0.003, 35, 15);
-  chassis.set_pid_constants(&chassis.swingPID, 7, 0, 45, 0);
+  ez_chassis.set_slew_min_power(80, 80);
+  ez_chassis.set_slew_distance(7, 7);
+  ez_chassis.set_pid_constants(&ez_chassis.headingPID, .1, 0, 20, 0);
+  ez_chassis.set_pid_constants(&ez_chassis.forward_drivePID, 0.45, 0, 5, 0);
+  ez_chassis.set_pid_constants(&ez_chassis.backward_drivePID, 0.45, 0, 5, 0);
+  ez_chassis.set_pid_constants(&ez_chassis.turnPID, 7.0, 0.003, 35, 15);
+  ez_chassis.set_pid_constants(&ez_chassis.swingPID, 7, 0, 45, 0);
 }
 
 
 void exit_condition_defaults() {
-  chassis.set_exit_condition(chassis.turn_exit, 100, 3, 500, 7, 500, 500);
-  chassis.set_exit_condition(chassis.swing_exit, 100, 3, 500, 7, 500, 500);
-  chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
+  ez_chassis.set_exit_condition(ez_chassis.turn_exit, 100, 3, 500, 7, 500, 500);
+  ez_chassis.set_exit_condition(ez_chassis.swing_exit, 100, 3, 500, 7, 500, 500);
+  ez_chassis.set_exit_condition(ez_chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
 void modified_exit_condition() {
-  chassis.set_exit_condition(chassis.turn_exit, 100, 3, 500, 7, 500, 500);
-  chassis.set_exit_condition(chassis.swing_exit, 100, 3, 500, 7, 500, 500);
-  chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
+  ez_chassis.set_exit_condition(ez_chassis.turn_exit, 100, 3, 500, 7, 500, 500);
+  ez_chassis.set_exit_condition(ez_chassis.swing_exit, 100, 3, 500, 7, 500, 500);
+  ez_chassis.set_exit_condition(ez_chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
 
@@ -53,26 +55,33 @@ void drive_example() {
   // The second parameter is max speed the robot will drive at
   // The third parameter is a boolean (true or false) for enabling/disabling a slew at the start of drive motions
   // for slew, only enable it when the drive distance is greater then the slew distance + a few inches
-
-  //dummy
-  chassis.wait_drive();
-  chassis.set_drive_pid(0.2, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-1, DRIVE_SPEED);
-  chassis.wait_drive();
-  pros::delay(1000);
-  chassis.set_drive_pid(-1, DRIVE_SPEED);
-  chassis.wait_drive();
-  pros::delay(1000);
-    chassis.set_drive_pid(2, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(1000);
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
-  pros::delay(1000);
-  chassis.set_turn_pid(-90, TURN_SPEED);
-  chassis.wait_drive();
-  pros::delay(1000);
+  double exit_error = .1;
+  arms::chassis::move(24);
+  arms::chassis::waitUntilFinished(exit_error);
+  arms::chassis::move(12, arms::REVERSE);
+  arms::chassis::waitUntilFinished(exit_error);
+  arms::chassis::move(-12, arms::REVERSE);
+  arms::chassis::waitUntilFinished(exit_error);
+  flywheel.move_velocity(600);
+  // //dummy
+  // ez_chassis.wait_drive();
+  // ez_chassis.set_drive_pid(0.2, DRIVE_SPEED);
+  // ez_chassis.wait_drive();
+  // ez_chassis.set_drive_pid(-1, DRIVE_SPEED);
+  // ez_chassis.wait_drive();
+  // pros::delay(1000);
+  // ez_chassis.set_drive_pid(-1, DRIVE_SPEED);
+  // ez_chassis.wait_drive();
+  // pros::delay(1000);
+  //   ez_chassis.set_drive_pid(2, DRIVE_SPEED, true);
+  // ez_chassis.wait_drive();
+  // pros::delay(1000);
+  // ez_chassis.set_turn_pid(90, TURN_SPEED);
+  // ez_chassis.wait_drive();
+  // pros::delay(1000);
+  // ez_chassis.set_turn_pid(-90, TURN_SPEED);
+  // ez_chassis.wait_drive();
+  // pros::delay(1000);
 }
 
 
@@ -85,14 +94,14 @@ void turn_example() {
   // The second parameter is max speed the robot will drive at
 
 
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(90, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(45, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(0, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(0, TURN_SPEED);
+  ez_chassis.wait_drive();
 }
 
 
@@ -101,20 +110,20 @@ void turn_example() {
 // Combining Turn + Drive
 ///
 void drive_and_turn() {
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(45, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(-45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(-45, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(0, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(0, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_drive_pid(-24, DRIVE_SPEED, true);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-24, DRIVE_SPEED, true);
+  ez_chassis.wait_drive();
 }
 
 
@@ -127,25 +136,25 @@ void wait_until_change_speed() {
 
 
   // When the robot gets to 6 inches, the robot will travel the remaining distance at a max speed of 40
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
-  chassis.wait_until(6);
-  chassis.set_max_speed(40); // After driving 6 inches at DRIVE_SPEED, the robot will go the remaining distance at 40 speed
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  ez_chassis.wait_until(6);
+  ez_chassis.set_max_speed(40); // After driving 6 inches at DRIVE_SPEED, the robot will go the remaining distance at 40 speed
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(45, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(-45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(-45, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(0, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(0, TURN_SPEED);
+  ez_chassis.wait_drive();
 
   // When the robot gets to -6 inches, the robot will travel the remaining distance at a max speed of 40
-  chassis.set_drive_pid(-24, DRIVE_SPEED, true);
-  chassis.wait_until(-6);
-  chassis.set_max_speed(40); // After driving 6 inches at DRIVE_SPEED, the robot will go the remaining distance at 40 speed
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-24, DRIVE_SPEED, true);
+  ez_chassis.wait_until(-6);
+  ez_chassis.set_max_speed(40); // After driving 6 inches at DRIVE_SPEED, the robot will go the remaining distance at 40 speed
+  ez_chassis.wait_drive();
 }
 
 
@@ -159,14 +168,14 @@ void swing_example() {
   // The third parameter is speed of the moving side of the drive
 
 
-  chassis.set_swing_pid(ez::LEFT_SWING, 45, SWING_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_swing_pid(ez::LEFT_SWING, 45, SWING_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
-  chassis.wait_until(12);
+  ez_chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  ez_chassis.wait_until(12);
 
-  chassis.set_swing_pid(ez::RIGHT_SWING, 0, SWING_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_swing_pid(ez::RIGHT_SWING, 0, SWING_SPEED);
+  ez_chassis.wait_drive();
 }
 
 
@@ -175,20 +184,20 @@ void swing_example() {
 // Auto that tests everything
 ///
 void combining_movements() {
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(45, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_swing_pid(ez::RIGHT_SWING, -45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_swing_pid(ez::RIGHT_SWING, -45, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(0, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(0, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_drive_pid(-24, DRIVE_SPEED, true);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-24, DRIVE_SPEED, true);
+  ez_chassis.wait_drive();
 }
 
 
@@ -200,13 +209,13 @@ void tug (int attempts) {
   for (int i=0; i<attempts-1; i++) {
     // Attempt to drive backwards
     printf("i - %i", i);
-    chassis.set_drive_pid(-12, 127);
-    chassis.wait_drive();
+    ez_chassis.set_drive_pid(-12, 127);
+    ez_chassis.wait_drive();
 
     // If failsafed...
-    if (chassis.interfered) {
-      chassis.reset_drive_sensor();
-      chassis.set_drive_pid(-2, 20);
+    if (ez_chassis.interfered) {
+      ez_chassis.reset_drive_sensor();
+      ez_chassis.set_drive_pid(-2, 20);
       pros::delay(1000);
     }
     // If robot successfully drove back, return
@@ -219,16 +228,16 @@ void tug (int attempts) {
 // If there is no interference, robot will drive forward and turn 90 degrees. 
 // If interfered, robot will drive forward and then attempt to drive backwards. 
 void interfered_example() {
- chassis.set_drive_pid(24, DRIVE_SPEED, true);
- chassis.wait_drive();
+ ez_chassis.set_drive_pid(24, DRIVE_SPEED, true);
+ ez_chassis.wait_drive();
 
- if (chassis.interfered) {
+ if (ez_chassis.interfered) {
    tug(3);
    return;
  }
 
- chassis.set_turn_pid(90, TURN_SPEED);
- chassis.wait_drive();
+ ez_chassis.set_turn_pid(90, TURN_SPEED);
+ ez_chassis.wait_drive();
 }
 
 
@@ -239,9 +248,9 @@ void interfered_example() {
 void Test()
 {
 //flywheel.move_voltage(12000);
-  //chassis.wait_drive();
-  chassis.set_drive_pid(-tileLength*0.25, 80);
-  chassis.wait_drive();
+  //ez_chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength*0.25, 80);
+  ez_chassis.wait_drive();
   intake.move_velocity(100);
   pros::delay(2000);
   pros::delay(300);
@@ -251,23 +260,23 @@ void Test()
 void front_auton()
 {
   flywheel.move_voltage(9000);
-  //chassis.wait_drive();
+  //ez_chassis.wait_drive();
 
 
   //roller
-  chassis.set_drive_pid(-tileLength*0.3, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength*0.3, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(100);
   pros::delay(150);
   intake.move_velocity(0);
 
   //move off roller 
-  chassis.set_drive_pid(tileLength * .3, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * .3, DRIVE_SPEED);
+  ez_chassis.wait_drive();
 
   //turn to lowgoal
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(90, TURN_SPEED);
+  ez_chassis.wait_drive();
 
   // controller.print(0, 0, "Flywheel: %f", flywheel.get_actual_velocity());
 
@@ -284,24 +293,24 @@ void front_auton()
   flywheel.move_voltage(12000);
 
   //turn to 3 stack
-  chassis.set_turn_pid(-130, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(-130, TURN_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(-200);
 
   //intake 3 stack 
-  chassis.set_drive_pid(-tileLength *2.3 , DRIVE_SPEED/1.5);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength *2.3 , DRIVE_SPEED/1.5);
+  ez_chassis.wait_drive();
   pros::delay(500);
 
   //turn to goal 
-  chassis.set_turn_pid(-45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(-45, TURN_SPEED);
+  ez_chassis.wait_drive();
   
   flywheel.move_velocity(550);
-  // chassis.set_drive_pid(-tileLength * .2, DRIVE_SPEED / 2);
-  // chassis.wait_drive();
-  chassis.set_turn_pid(-34, TURN_SPEED);
-  chassis.wait_drive();
+  // ez_chassis.set_drive_pid(-tileLength * .2, DRIVE_SPEED / 2);
+  // ez_chassis.wait_drive();
+  ez_chassis.set_turn_pid(-34, TURN_SPEED);
+  ez_chassis.wait_drive();
   pros::delay(3000);
   //shoot 
   for(int i = 0; i < 3; i++)
@@ -310,8 +319,89 @@ void front_auton()
     pros::delay(400);
     flywheel.move_velocity(600);
     indexerPiston.set_value(false);
-    chassis.set_turn_pid(-36.0, TURN_SPEED);
-    chassis.wait_drive();
+    ez_chassis.set_turn_pid(-36.0, TURN_SPEED);
+    ez_chassis.wait_drive();
+    pros::delay(600);
+   
+  }
+  // pros::delay(100);
+  // intake.move_velocity(0);
+  // for(int i = 0; i < 3; i++)
+  // {
+  //   indexerPiston.set_value(true);
+  //   pros::delay(300);
+  //   indexerPiston.set_value(false);
+  //   pros::delay(300);
+  // }
+}
+
+void front_auton_arms()
+{
+  double exit_error = .1;
+  flywheel.move_voltage(9000);
+  //ez_chassis.wait_drive();
+
+
+  //roller
+  arms::chassis::move(-24 * .3);
+  arms::chassis::waitUntilFinished(exit_error);
+  intake.move_velocity(100);
+  pros::delay(150);
+  intake.move_velocity(0);
+
+  //move off roller 
+  arms::chassis::move(24 * .3);
+  arms::chassis::waitUntilFinished(exit_error);
+
+  //turn to lowgoal
+  arms::chassis::turn(90);
+  arms::chassis::waitUntilFinished(exit_error);
+
+  // controller.print(0, 0, "Flywheel: %f", flywheel.get_actual_velocity());
+
+  //shoot
+  for(int i = 0; i < 2; i++)
+  {
+    indexerPiston.set_value(true);
+    pros::delay(120);
+    flywheel.move_voltage(9000);
+    indexerPiston.set_value(false);
+    pros::delay(200);
+  }
+  pros::delay(200);
+  flywheel.move_voltage(12000);
+
+  //turn to 3 stack
+  arms::chassis::turn(-130);
+  arms::chassis::waitUntilFinished(exit_error);
+  intake.move_velocity(-200);
+
+  //intake 3 stack 
+  arms::chassis::move(24 * -2.3);
+  arms::chassis::waitUntilFinished(exit_error);
+  // ez_chassis.set_drive_pid(-tileLength *2.3 , DRIVE_SPEED/1.5);
+  // ez_chassis.wait_drive();
+  pros::delay(500);
+
+  //turn to goal 
+  ez_chassis.set_turn_pid(-45, TURN_SPEED);
+  ez_chassis.wait_drive();
+  
+  flywheel.move_velocity(550);
+  // ez_chassis.set_drive_pid(-tileLength * .2, DRIVE_SPEED / 2);
+  // ez_chassis.wait_drive();
+  ez_chassis.set_turn_pid(-34, TURN_SPEED);
+  ez_chassis.wait_drive();
+  pros::delay(3000);
+  //shoot 
+  for(int i = 0; i < 3; i++)
+  {
+    indexerPiston.set_value(true);
+    pros::delay(400);
+    flywheel.move_velocity(600);
+    indexerPiston.set_value(false);
+    ez_chassis.set_turn_pid(-36.0, TURN_SPEED);
+    ez_chassis.wait_drive();
     pros::delay(600);
    
   }
@@ -329,28 +419,28 @@ void front_auton()
 void easy_prog_skills()
 {
   flywheel.move_velocity(500);
-  chassis.set_drive_pid(-tileLength*0.4, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength*0.4, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(-100);
   pros::delay(600);
   intake.move_velocity(0);
 
-  chassis.set_drive_pid(tileLength * 0.7, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * 0.7, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(-100);
-  chassis.set_turn_pid(90.0, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-tileLength * 1.1, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(90.0, TURN_SPEED);
+  ez_chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength * 1.1, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   pros::delay(600);
   intake.move_velocity(0);
-  chassis.set_drive_pid(tileLength * 1, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * 1, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(-100);
   pros::delay(5000);
   intake.move_velocity(0);
-  chassis.set_turn_pid(110.0, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(110.0, TURN_SPEED);
+  ez_chassis.wait_drive();
   for(int i = 0; i < 3; i++)
   {
     //flywheel.move_voltage(12000);
@@ -360,10 +450,10 @@ void easy_prog_skills()
     //flywheel.move_voltage(12000);
     pros::delay(2000);
   }
-  chassis.set_turn_pid(-135.0, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(tileLength * .6, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(-135.0, TURN_SPEED);
+  ez_chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * .6, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   piston.set_value(true);
 }
 
@@ -380,16 +470,16 @@ void new_left_auton()
   }
   flywheel.move_voltage(12000);
   
-  chassis.set_turn_pid(-137, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(-137, TURN_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(-100);
-  chassis.set_drive_pid(-tileLength * 2.2, DRIVE_SPEED / 2);
-  chassis.wait_drive();
-  chassis.set_turn_pid(143, TURN_SPEED);
+  ez_chassis.set_drive_pid(-tileLength * 2.2, DRIVE_SPEED / 2);
+  ez_chassis.wait_drive();
+  ez_chassis.set_turn_pid(143, TURN_SPEED);
   
-  chassis.wait_drive();
-  chassis.set_drive_pid(tileLength * .2, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * .2, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   flywheel.move_voltage(12000);
   for(int i = 0; i < 2; i++)
   {
@@ -406,28 +496,28 @@ void new_left_auton()
 void right_auton()
 {
   flywheel.move_voltage(12000);
-  chassis.set_drive_pid(-tileLength*0.4, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-tileLength*0.9, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength*0.4, DRIVE_SPEED);
+  ez_chassis.wait_drive();
+  ez_chassis.set_turn_pid(90, TURN_SPEED);
+  ez_chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength*0.9, DRIVE_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(170, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(170, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_drive_pid(-tileLength*0.35, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength*0.35, DRIVE_SPEED);
+  ez_chassis.wait_drive();
 
   intake.move_velocity(100);
   pros::delay(300);
   intake.move_velocity(0);
 
-  chassis.set_drive_pid(tileLength*0.25, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength*0.25, DRIVE_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(90, TURN_SPEED);
+  ez_chassis.wait_drive();
 
   for(int i = 0; i < 2; i++)
   {
@@ -437,14 +527,14 @@ void right_auton()
     pros::delay(400);
   }
   intake.move_velocity(-200);
-  chassis.set_turn_pid(-50, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(-50, TURN_SPEED);
+  ez_chassis.wait_drive();
 
-  chassis.set_drive_pid(-tileLength*2.5, DRIVE_SPEED*0.5);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength*2.5, DRIVE_SPEED*0.5);
+  ez_chassis.wait_drive();
 
-  chassis.set_turn_pid(45, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(45, TURN_SPEED);
+  ez_chassis.wait_drive();
   flywheel.move_voltage(6000);
   pros::delay(1000);
   for(int i = 0; i < 3; i++)
@@ -459,34 +549,34 @@ void prog_skills()
 {
   
   flywheel.move_velocity(500);
-  chassis.set_drive_pid(-tileLength*0.4, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength*0.4, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(-100);
   pros::delay(600);
   intake.move_velocity(0);
 
-  chassis.set_drive_pid(tileLength * 0.7, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * 0.7, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(-100);
-  chassis.set_turn_pid(90.0, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-tileLength * 1.1, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(90.0, TURN_SPEED);
+  ez_chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength * 1.1, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   pros::delay(600);
   intake.move_velocity(0);
-  chassis.set_drive_pid(tileLength * 1, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * 1, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   intake.move_velocity(-100);
   pros::delay(4000);
   intake.move_velocity(0);
-  chassis.set_turn_pid(110.0, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(110.0, TURN_SPEED);
+  ez_chassis.wait_drive();
 
   flywheel.move_velocity(450);
-  chassis.set_drive_pid(tileLength * 2, DRIVE_SPEED / 2);
-  chassis.wait_drive();
-  chassis.set_turn_pid(88.0, TURN_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * 2, DRIVE_SPEED / 2);
+  ez_chassis.wait_drive();
+  ez_chassis.set_turn_pid(88.0, TURN_SPEED);
+  ez_chassis.wait_drive();
   for(int i = 0; i < 3; i++)
   {
     //flywheel.move_voltage(12000);
@@ -496,13 +586,13 @@ void prog_skills()
     //flywheel.move_voltage(12000);
     pros::delay(2000);
   }
-  chassis.set_turn_pid(110.0, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-tileLength *2.5, DRIVE_SPEED);
-  chassis.wait_drive();
-  chassis.set_turn_pid(-135.0, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(tileLength * .6, DRIVE_SPEED);
-  chassis.wait_drive();
+  ez_chassis.set_turn_pid(110.0, TURN_SPEED);
+  ez_chassis.wait_drive();
+  ez_chassis.set_drive_pid(-tileLength *2.5, DRIVE_SPEED);
+  ez_chassis.wait_drive();
+  ez_chassis.set_turn_pid(-135.0, TURN_SPEED);
+  ez_chassis.wait_drive();
+  ez_chassis.set_drive_pid(tileLength * .6, DRIVE_SPEED);
+  ez_chassis.wait_drive();
   piston.set_value(true);
 }

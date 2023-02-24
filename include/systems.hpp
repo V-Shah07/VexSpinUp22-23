@@ -12,17 +12,17 @@ const int flywheelPort = 7;
 const int intakePort = 8;
 
 
-const int inertialPort = 12;
+const int inertialPort = 11;
 
 const int visionSensorPort = 9;
 const int aimbotSensorPort = 18;
 
-const bool leftBackReversed = false;
-const bool rightBackReversed = true;
-const bool leftFrontReversed = false;
-const bool rightFrontReversed = true;
-const bool leftTopReversed = false;
-const bool rightTopReversed = true;
+const bool leftBackReversed = true;
+const bool rightBackReversed = false;
+const bool leftFrontReversed = true;
+const bool rightFrontReversed = false;
+const bool leftTopReversed = true;
+const bool rightTopReversed = false;
 
 
 const bool flywheelReversed = false;

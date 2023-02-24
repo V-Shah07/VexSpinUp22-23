@@ -2,7 +2,7 @@
 
 #include "EZ-Template/drive/drive.hpp"
 
-extern Drive chassis;
+extern Drive ez_chassis;
 
 void drive_example();
 void turn_example();
@@ -22,3 +22,4 @@ void right_auton();
 void prog_skills();
 void front_auton();
 void easy_prog_skills();
+void front_auton_arms();
