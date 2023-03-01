@@ -94,7 +94,7 @@ void expand()
 
 void flywheelMaintainer()
 {
-    int velocityTarget = 480;
+    int velocityTarget = 330;
     bool flywheel_on = true;
     controller.clear();
     grapher->addDataType("Desired Vel", COLOR_ORANGE);
@@ -135,4 +135,22 @@ void test()
         pros::lcd::set_text(4, "Test");
         controller.print(0, 0, "Test");
     }
+}
+
+void match_loader() 
+{
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+        for (int i = 0; i < 3; i++) {
+            intake.tare_position();
+            while (intake.get_position() < 710) {
+                intake.move_velocity(100);
+                pros::delay(10);
+            }
+            intake.move_velocity(0);
+            pros::delay(500);
+        }
+
+
+    }
+
 }

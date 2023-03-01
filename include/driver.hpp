@@ -10,3 +10,4 @@ void move(double leftPower, double rightPower);
 void flywheelMaintainer();
 void rapidFire();
 void test();
+void match_loader();
