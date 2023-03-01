@@ -56,6 +56,7 @@ extern pros::Controller controller;
 
 extern pros::ADIDigitalOut piston;
 extern pros::ADIDigitalOut indexerPiston;
+extern pros::ADIDigitalOut blockerPiston;
 
 extern pros::ADIEncoder trackingEncoder;
 

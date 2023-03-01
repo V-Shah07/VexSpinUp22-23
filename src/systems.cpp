@@ -24,6 +24,7 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::ADIDigitalOut piston('F');
 pros::ADIDigitalOut indexerPiston('E');
+pros::ADIDigitalOut blockerPiston('G');
 
 pros::IMU inertial(inertialPort);
 

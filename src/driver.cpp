@@ -86,6 +86,10 @@ void moveIntake()
 
 void expand()
 {
+    if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_A))
+    {
+        blockerPiston.set_value(true);
+    }
     if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B))
     {
         piston.set_value(true);
@@ -139,7 +143,7 @@ void test()
 
 void match_loader() 
 {
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
         for (int i = 0; i < 3; i++) {
             intake.tare_position();
             while (intake.get_position() < 710) {
