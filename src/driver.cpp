@@ -98,7 +98,7 @@ void expand()
 
 void flywheelMaintainer()
 {
-    int velocityTarget = 330;
+    int velocityTarget = 350;
     bool flywheel_on = true;
     controller.clear();
     grapher->addDataType("Desired Vel", COLOR_ORANGE);
