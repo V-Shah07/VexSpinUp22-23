@@ -547,52 +547,62 @@ void right_auton()
 }
 void prog_skills()
 {
-  
-  flywheel.move_velocity(500);
-  ez_chassis.set_drive_pid(-tileLength*0.4, DRIVE_SPEED);
+  ez_chassis.set_turn_pid(10.0, TURN_SPEED);
   ez_chassis.wait_drive();
-  intake.move_velocity(-100);
-  pros::delay(600);
-  intake.move_velocity(0);
 
-  ez_chassis.set_drive_pid(tileLength * 0.7, DRIVE_SPEED);
+  ez_chassis.set_drive_pid(-tileLength, DRIVE_SPEED);
   ez_chassis.wait_drive();
-  intake.move_velocity(-100);
+
+  ez_chassis.set_turn_pid(-100.0, TURN_SPEED);
+  ez_chassis.wait_drive();
+
+  ez_chassis.set_drive_pid(-tileLength * 0.6, DRIVE_SPEED);
+  ez_chassis.wait_drive();
+
+  intake.move_velocity(200);
+  pros::delay(300);
+
+  ez_chassis.set_drive_pid(tileLength * 0.6, DRIVE_SPEED);
+  ez_chassis.wait_drive();
+
   ez_chassis.set_turn_pid(90.0, TURN_SPEED);
   ez_chassis.wait_drive();
-  ez_chassis.set_drive_pid(-tileLength * 1.1, DRIVE_SPEED);
-  ez_chassis.wait_drive();
-  pros::delay(600);
-  intake.move_velocity(0);
-  ez_chassis.set_drive_pid(tileLength * 1, DRIVE_SPEED);
-  ez_chassis.wait_drive();
-  intake.move_velocity(-100);
-  pros::delay(4000);
-  intake.move_velocity(0);
-  ez_chassis.set_turn_pid(110.0, TURN_SPEED);
+
+  ez_chassis.set_drive_pid(-tileLength , DRIVE_SPEED);
   ez_chassis.wait_drive();
 
-  flywheel.move_velocity(450);
-  ez_chassis.set_drive_pid(tileLength * 2, DRIVE_SPEED / 2);
+  intake.move_velocity(-200);
+  pros::delay(500);
+
+  ez_chassis.set_drive_pid(tileLength * 0.6, DRIVE_SPEED);
   ez_chassis.wait_drive();
-  ez_chassis.set_turn_pid(88.0, TURN_SPEED);
+
+  ez_chassis.set_turn_pid(-45.0, TURN_SPEED);
   ez_chassis.wait_drive();
-  for(int i = 0; i < 3; i++)
-  {
-    //flywheel.move_voltage(12000);
-    indexerPiston.set_value(true);
-    pros::delay(100);
-    indexerPiston.set_value(false);
-    //flywheel.move_voltage(12000);
-    pros::delay(2000);
-  }
-  ez_chassis.set_turn_pid(110.0, TURN_SPEED);
-  ez_chassis.wait_drive();
-  ez_chassis.set_drive_pid(-tileLength *2.5, DRIVE_SPEED);
-  ez_chassis.wait_drive();
-  ez_chassis.set_turn_pid(-135.0, TURN_SPEED);
-  ez_chassis.wait_drive();
-  ez_chassis.set_drive_pid(tileLength * .6, DRIVE_SPEED);
-  ez_chassis.wait_drive();
-  piston.set_value(true);
+
+  //piston.set_value(true);
 }
+
+void final_auton()
+{
+  ez_chassis.set_drive_pid(-0.4 * tileLength, DRIVE_SPEED);
+  ez_chassis.wait_drive();
+  
+  intake.move_velocity(200);
+  pros::delay(300);
+
+  ez_chassis.set_drive_pid(0.6 * tileLength, DRIVE_SPEED);
+  ez_chassis.wait_drive();
+
+  for(int i = 0; i < 2; i++)
+  {
+    indexerPiston.set_value(true);
+    pros::delay(400);
+    indexerPiston.set_value(false);
+    pros::delay(400);
+  }
+
+  ez_chassis.set_turn_pid(-45.0, TURN_SPEED);
+  ez_chassis.wait_drive();
+
+  }

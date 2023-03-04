@@ -145,17 +145,9 @@ void autonomous() {
   //drive_example();
   //straight(100.0, true);
   //ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
-  switch (abs(arms::selector::auton)) {
-    case 0:
-      drive_example();
-      break;
-    case 1:
-      front_auton();
-      break;
-    default:
-      drive_example();
-      break;
-  }
+  
+  //prog_skills();
+  final_auton();
 }
 
 

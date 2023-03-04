@@ -23,3 +23,5 @@ void prog_skills();
 void front_auton();
 void easy_prog_skills();
 void front_auton_arms();
+
+void final_auton();
